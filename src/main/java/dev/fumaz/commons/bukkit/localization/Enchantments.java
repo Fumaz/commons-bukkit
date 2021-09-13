@@ -1,22 +1,24 @@
 package dev.fumaz.commons.bukkit.localization;
 
+import dev.fumaz.commons.bukkit.text.ColorFormatting;
 import dev.fumaz.commons.math.Randoms;
 import dev.fumaz.commons.math.Romans;
-import dev.fumaz.commons.bukkit.math.Vectors;
-import dev.fumaz.commons.bukkit.text.ColorFormatting;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -80,17 +82,20 @@ public final class Enchantments {
         return ColorFormatting.MAGIC_PREFIX + color + getLocalizedName(enchantment) + " " + Romans.toRoman(level);
     }
 
+    // todo fix duplicate code
     public static ItemStack fixLore(@NotNull ItemStack itemStack) {
         List<String> lore = itemStack.getLore() != null ? new ArrayList<>(itemStack.getLore()) : new ArrayList<>();
         removeEnchantmentsFromLore(lore);
 
-        if (itemStack.getEnchantments().isEmpty()) {
+        Map<Enchantment, Integer> enchantments = getAppliedEnchantments(itemStack);
+
+        if (enchantments.isEmpty()) {
             itemStack.setLore(lore);
             return itemStack;
         }
 
         lore.add(ChatColor.GRAY + "");
-        itemStack.getEnchantments()
+        enchantments
                 .entrySet()
                 .stream()
                 .map(entry -> toLore(entry.getKey(), entry.getValue()))
@@ -104,13 +109,15 @@ public final class Enchantments {
         List<String> lore = itemStack.getLore() != null ? new ArrayList<>(itemStack.getLore()) : new ArrayList<>();
         removeEnchantmentsFromLore(lore);
 
-        if (itemStack.getEnchantments().isEmpty()) {
+        Map<Enchantment, Integer> enchantments = getAppliedEnchantments(itemStack);
+
+        if (enchantments.isEmpty()) {
             itemStack.setLore(lore);
             return itemStack;
         }
 
         lore.add(ChatColor.GRAY + "");
-        itemStack.getEnchantments()
+        enchantments
                 .entrySet()
                 .stream()
                 .map(entry -> toRomanLore(entry.getKey(), entry.getValue()))
@@ -118,6 +125,20 @@ public final class Enchantments {
 
         itemStack.setLore(lore);
         return itemStack;
+    }
+
+    public static Map<Enchantment, Integer> getAppliedEnchantments(@Nullable ItemStack item) {
+        if (item == null) {
+            return Collections.emptyMap();
+        }
+
+        Map<Enchantment, Integer> enchantments = new HashMap<>(item.getEnchantments());
+
+        if (item.getItemMeta() instanceof EnchantmentStorageMeta) {
+            enchantments.putAll(((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants());
+        }
+
+        return enchantments;
     }
 
     public static List<Enchantment> getSuitableEnchantments(@Nullable ItemStack item) {
