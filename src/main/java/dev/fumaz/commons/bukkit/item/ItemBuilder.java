@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -254,6 +255,17 @@ public class ItemBuilder {
     }
 
     /**
+     * Adds a set of {@link Enchantment}s to the {@link ItemStack}
+     *
+     * @param enchantments the map with the enchantments
+     * @return the {@link ItemBuilder}
+     */
+    public ItemBuilder enchant(@NotNull Map<Enchantment, Integer> enchantments) {
+        enchantments.forEach(this::enchant);
+        return this;
+    }
+
+    /**
      * Stores an {@link Enchantment} in the {@link ItemStack}'s {@link EnchantmentStorageMeta} with the specified {@code int} level
      *
      * @param enchantment the {@link Enchantment}
@@ -262,6 +274,17 @@ public class ItemBuilder {
      */
     public ItemBuilder storeEnchantment(@NotNull Enchantment enchantment, int level) {
         return consumeCustomMeta(EnchantmentStorageMeta.class, meta -> meta.addStoredEnchant(enchantment, level, true));
+    }
+
+    /**
+     * Stores a set of {@link Enchantment} in the {@link ItemStack}'s {@link EnchantmentStorageMeta}
+     *
+     * @param enchantments the map with the enchantments
+     * @return the {@link ItemBuilder}
+     */
+    public ItemBuilder storeEnchantments(Map<Enchantment, Integer> enchantments) {
+        enchantments.forEach(this::storeEnchantment);
+        return this;
     }
 
     /**
