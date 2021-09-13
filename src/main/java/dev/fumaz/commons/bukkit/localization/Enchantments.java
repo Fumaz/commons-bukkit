@@ -97,7 +97,6 @@ public final class Enchantments {
             return itemStack;
         }
 
-        lore.add(ChatColor.GRAY + "");
         enchantments
                 .entrySet()
                 .stream()
@@ -121,7 +120,6 @@ public final class Enchantments {
             return itemStack;
         }
 
-        lore.add(ChatColor.GRAY + "");
         enchantments
                 .entrySet()
                 .stream()
