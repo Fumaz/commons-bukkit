@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +85,8 @@ public final class Enchantments {
 
     // todo fix duplicate code
     public static ItemStack fixLore(@NotNull ItemStack itemStack) {
+        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
         List<String> lore = itemStack.getLore() != null ? new ArrayList<>(itemStack.getLore()) : new ArrayList<>();
         removeEnchantmentsFromLore(lore);
 
@@ -106,6 +109,8 @@ public final class Enchantments {
     }
 
     public static ItemStack fixRomanLore(@NotNull ItemStack itemStack) {
+        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
         List<String> lore = itemStack.getLore() != null ? new ArrayList<>(itemStack.getLore()) : new ArrayList<>();
         removeEnchantmentsFromLore(lore);
 
