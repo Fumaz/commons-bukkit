@@ -7,9 +7,11 @@ import dev.fumaz.commons.math.Randoms;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -124,6 +126,33 @@ public class ItemBuilder {
      */
     public <T extends ItemMeta> ItemBuilder consumeCustomMeta(Class<T> clazz, Consumer<T> consumer) {
         return consumeMeta(meta -> consumer.accept(clazz.cast(meta)));
+    }
+
+    /**
+     * Feeds the {@link ItemStack}'s {@link BlockState} to a {@link Consumer}
+     *
+     * @param consumer the {@link Consumer}
+     * @return the {@link ItemBuilder}
+     */
+    public ItemBuilder consumeBlockState(Consumer<BlockState> consumer) {
+        return consumeCustomMeta(BlockStateMeta.class, meta -> {
+            BlockState state = meta.getBlockState();
+
+            consumer.accept(state);
+            meta.setBlockState(state);
+        });
+    }
+
+    /**
+     * Feeds a subclass of the {@link ItemStack}'s {@link BlockState} to a {@link Consumer}
+     *
+     * @param clazz    the subclass of {@link BlockState} to consume
+     * @param consumer the {@link Consumer}
+     * @param <T>      the type of the {@link BlockState}
+     * @return the {@link ItemBuilder}
+     */
+    public <T extends BlockState> ItemBuilder consumeCustomBlockState(Class<T> clazz, Consumer<T> consumer) {
+        return consumeBlockState(state -> consumer.accept(clazz.cast(state)));
     }
 
     /**
@@ -434,6 +463,12 @@ public class ItemBuilder {
         return meta.hasColor();
     }
 
+    /**
+     * Sets the base potion data of the {@link ItemStack}
+     *
+     * @param potionData the {@link PotionData}
+     * @return the {@link ItemBuilder}
+     */
     public ItemBuilder basePotionData(PotionData potionData) {
         return consumeCustomMeta(PotionMeta.class, meta -> meta.setBasePotionData(potionData));
     }
