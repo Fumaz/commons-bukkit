@@ -1,5 +1,6 @@
 package dev.fumaz.commons.bukkit.misc;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -24,6 +25,10 @@ public final class Sounds {
 
     public static void play(World world, Location location, Sound sound) {
         world.playSound(location, sound, 1f, 1f);
+    }
+
+    public static void broadcast(Sound sound) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), sound, 1f, 1f));
     }
 
 }
