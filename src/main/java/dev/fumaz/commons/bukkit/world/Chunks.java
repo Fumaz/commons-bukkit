@@ -16,7 +16,7 @@ public final class Chunks {
      * @param chunk    the chunk
      * @param consumer the consumer
      */
-    public static void consumeBlocks(Chunk chunk, Consumer<Block> consumer) {
+    public static void iterateBlocks(Chunk chunk, Consumer<Block> consumer) {
         for (int x = 0; x < 16; ++x) {
             for (int y = 0; y < chunk.getWorld().getMaxHeight(); ++y) {
                 for (int z = 0; z < 16; ++z) {

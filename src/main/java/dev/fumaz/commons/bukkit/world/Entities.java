@@ -1,20 +1,19 @@
 package dev.fumaz.commons.bukkit.world;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.util.BoundingBox;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-public class Entities {
+public final class Entities {
 
+    /**
+     * Returns all entities that are colliding with the entity.
+     *
+     * @param entity the entity
+     * @return a collection of entities
+     */
     public static Collection<Entity> getEntitiesInBoundingBox(Entity entity) {
-        BoundingBox boundingBox = entity.getBoundingBox().clone();
-
-        return entity.getWorld().getEntities()
-                .stream()
-                .filter(target -> boundingBox.overlaps(target.getBoundingBox()))
-                .collect(Collectors.toList());
+        return BoundingBoxes.getEntities(entity.getWorld(), entity.getBoundingBox());
     }
 
 }

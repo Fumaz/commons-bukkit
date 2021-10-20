@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,13 +46,16 @@ public class Hologram implements Listener {
     public static Hologram create(@NotNull JavaPlugin plugin, @NotNull String text, @NotNull Location location) {
         Threads.catchAsync("hologram creation");
 
-        // TODO Actually test this cuz im 99% sure the hologram is too high
         ArmorStand stand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, CreatureSpawnEvent.SpawnReason.CUSTOM);
         stand.setCustomName(text);
         stand.setCustomNameVisible(true);
         stand.setVisible(false);
-
-        // TODO Remove gravity (need to implement version checks for that) and move/tick (need to implement paper checks for that)
+        stand.setGravity(true);
+        stand.setMarker(true);
+        stand.setCanTick(false);
+        stand.setCanMove(false);
+        stand.setCollidable(false);
+        stand.setDisabledSlots(EquipmentSlot.values());
 
         Hologram hologram = new Hologram(plugin, stand);
         HologramAddEvent event = new HologramAddEvent(hologram);
@@ -75,8 +79,11 @@ public class Hologram implements Listener {
     }
 
     public Hologram marker() {
-        // TODO Also move the armorstand higher cuz otherwise the hologram will be moved
         return consume(stand -> stand.setMarker(true));
+    }
+
+    public Hologram name(@Nullable String name) {
+        return consume(stand -> stand.setCustomName(name));
     }
 
     public Hologram setInteract(@Nullable Consumer<PlayerInteractAtEntityEvent> consumer) {
