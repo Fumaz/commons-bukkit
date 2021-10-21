@@ -6,6 +6,7 @@ import dev.fumaz.commons.bukkit.misc.Threads;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -26,13 +28,13 @@ import java.util.function.Consumer;
  */
 public class Hologram implements Listener {
 
-    private final JavaPlugin plugin;
-    private final ArmorStand stand;
+    private final UUID uuid;
+    private JavaPlugin plugin;
     private Consumer<PlayerInteractAtEntityEvent> onInteract;
 
-    private Hologram(@NotNull JavaPlugin plugin, @NotNull ArmorStand stand) {
+    private Hologram(@Nullable JavaPlugin plugin, @NotNull UUID uuid) {
         this.plugin = plugin;
-        this.stand = stand;
+        this.uuid = uuid;
     }
 
     /**
@@ -43,7 +45,7 @@ public class Hologram implements Listener {
      * @param location the location of the hologram
      * @return
      */
-    public static Hologram create(@NotNull JavaPlugin plugin, @NotNull String text, @NotNull Location location) {
+    public static Hologram create(@Nullable JavaPlugin plugin, @NotNull String text, @NotNull Location location) {
         Threads.catchAsync("hologram creation");
 
         ArmorStand stand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -57,7 +59,7 @@ public class Hologram implements Listener {
         stand.setCollidable(false);
         stand.setDisabledSlots(EquipmentSlot.values());
 
-        Hologram hologram = new Hologram(plugin, stand);
+        Hologram hologram = new Hologram(plugin, stand.getUniqueId());
         HologramAddEvent event = new HologramAddEvent(hologram);
         Bukkit.getPluginManager().callEvent(event);
 
@@ -69,8 +71,12 @@ public class Hologram implements Listener {
         return hologram;
     }
 
+    public static Hologram create(@NotNull String text, @NotNull Location location) {
+        return create(null, text, location);
+    }
+
     public Hologram consume(Consumer<ArmorStand> consumer) {
-        consumer.accept(stand);
+        consumer.accept(getArmorStand());
         return this;
     }
 
@@ -86,9 +92,20 @@ public class Hologram implements Listener {
         return consume(stand -> stand.setCustomName(name));
     }
 
+    public Hologram plugin(@Nullable JavaPlugin plugin) {
+        this.plugin = plugin;
+        removeInteract();
+
+        return this;
+    }
+
     public Hologram setInteract(@Nullable Consumer<PlayerInteractAtEntityEvent> consumer) {
         if (consumer == null) {
             return removeInteract();
+        }
+
+        if (plugin == null) {
+            throw new IllegalArgumentException("Cannot register interaction with null plugin");
         }
 
         onInteract = consumer;
@@ -115,13 +132,30 @@ public class Hologram implements Listener {
             return;
         }
 
-        stand.remove();
         removeInteract();
+
+        if (getArmorStand() != null) {
+            getArmorStand().remove();
+        }
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    public ArmorStand getArmorStand() {
+        Entity entity = Bukkit.getEntity(uuid);
+
+        if (!(entity instanceof ArmorStand)) {
+            return null;
+        }
+
+        return (ArmorStand) entity;
     }
 
     @EventHandler
     public void onInteract(PlayerInteractAtEntityEvent event) {
-        if (event.getRightClicked() != stand) {
+        if (!event.getRightClicked().getUniqueId().equals(uuid)) {
             return;
         }
 

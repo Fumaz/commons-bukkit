@@ -1,6 +1,8 @@
 package dev.fumaz.commons.bukkit.item;
 
 import com.google.common.collect.Lists;
+import dev.fumaz.commons.bukkit.interfaces.Item;
+import dev.fumaz.commons.bukkit.localization.Enchantments;
 import dev.fumaz.commons.bukkit.localization.PotionEffects;
 import dev.fumaz.commons.collection.FCollections;
 import dev.fumaz.commons.math.Randoms;
@@ -313,6 +315,16 @@ public class ItemBuilder {
      */
     public ItemBuilder storeEnchantments(Map<Enchantment, Integer> enchantments) {
         enchantments.forEach(this::storeEnchantment);
+        return this;
+    }
+
+    public ItemBuilder fixEnchantsLore() {
+        Enchantments.fixLore(itemStack);
+        return this;
+    }
+
+    public ItemBuilder fixRomanLore() {
+        Enchantments.fixRomanLore(itemStack);
         return this;
     }
 
