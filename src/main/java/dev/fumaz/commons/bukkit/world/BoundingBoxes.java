@@ -20,9 +20,9 @@ public final class BoundingBoxes {
      * @param consumer the consumer
      */
     public static void iterate(@NotNull BoundingBox box, @NotNull Consumer<Vector> consumer) {
-        for (int x = (int) -box.getMinX(); x <= box.getMaxX(); ++x) {
-            for (int y = (int) -box.getMinY(); y <= box.getMaxY(); ++y) {
-                for (int z = (int) -box.getMinZ(); z <= box.getMaxZ(); ++z) {
+        for (int x = (int) box.getMinX(); x <= box.getMaxX(); ++x) {
+            for (int y = (int) box.getMinY(); y <= box.getMaxY(); ++y) {
+                for (int z = (int) box.getMinZ(); z <= box.getMaxZ(); ++z) {
                     consumer.accept(new Vector(x, y, z));
                 }
             }
