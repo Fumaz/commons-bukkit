@@ -4,11 +4,11 @@ package dev.fumaz.commons.bukkit.gui;
 public final class Slots {
 
     public static int at(int row, int column) {
-        return ((row * 9) + column) - 1;
+        return (((row - 1) * 9) + column) - 1;
     }
 
     public static int middle(int row) {
-        return 4 + (row * 9);
+        return 4 + ((row - 1) * 9);
     }
 
     public static int start(int row) {
