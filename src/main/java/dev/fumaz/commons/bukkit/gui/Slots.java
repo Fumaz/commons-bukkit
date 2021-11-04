@@ -8,7 +8,7 @@ public final class Slots {
     }
 
     public static int middle(int row) {
-        return 4 * (row * 9);
+        return 4 + (row * 9);
     }
 
     public static int start(int row) {
