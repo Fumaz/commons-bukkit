@@ -8,6 +8,10 @@ public interface AnvilResponse {
         return new AnvilResponseClose();
     }
 
+    static AnvilResponse text(String text) {
+        return new AnvilResponseText(text);
+    }
+
     void execute(AnvilInput input, Player player);
 
 }
