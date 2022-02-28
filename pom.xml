@@ -6,7 +6,7 @@
 
     <groupId>dev.fumaz</groupId>
     <artifactId>commons-bukkit</artifactId>
-    <version>1.135</version>
+    <version>1.136</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>dev.fumaz</groupId>
             <artifactId>commons</artifactId>
-            <version>1.05</version>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 
