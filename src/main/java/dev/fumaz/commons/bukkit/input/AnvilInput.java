@@ -2,13 +2,11 @@ package dev.fumaz.commons.bukkit.input;
 
 import dev.fumaz.commons.bukkit.interfaces.FListener;
 import dev.fumaz.commons.bukkit.item.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -94,7 +92,7 @@ public class AnvilInput implements FListener {
     public void open(Player player) {
         close(player);
 
-        inventory = (AnvilInventory) player.openAnvil(player.getLocation(), true);
+        inventory = (AnvilInventory) player.openAnvil(null, true).getTopInventory();
         inventory.setFirstItem(itemLeft);
         inventory.setSecondItem(itemRight);
         inventory.setRepairCost(0);
@@ -105,8 +103,6 @@ public class AnvilInput implements FListener {
                     .displayName(text)
                     .build());
         }
-
-        player.openInventory(inventory);
     }
 
     @EventHandler
