@@ -94,7 +94,7 @@ public class AnvilInput implements FListener {
     public void open(Player player) {
         close(player);
 
-        inventory = (AnvilInventory) Bukkit.createInventory(null, InventoryType.ANVIL, title);
+        inventory = (AnvilInventory) player.openAnvil(player.getLocation(), true);
         inventory.setFirstItem(itemLeft);
         inventory.setSecondItem(itemRight);
         inventory.setRepairCost(0);
