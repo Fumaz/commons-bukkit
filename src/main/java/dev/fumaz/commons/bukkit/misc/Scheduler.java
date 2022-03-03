@@ -21,6 +21,10 @@ public class Scheduler {
         this.plugin = plugin;
     }
 
+    public static Scheduler of(Class<? extends JavaPlugin> clazz) {
+        return of(JavaPlugin.getPlugin(clazz));
+    }
+
     public static Scheduler of(JavaPlugin plugin) {
         return new Scheduler(plugin);
     }

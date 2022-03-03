@@ -45,4 +45,12 @@ public final class Logging {
         logger.info("");
     }
 
+    public static Logger of(JavaPlugin plugin) {
+        return plugin.getLogger();
+    }
+
+    public static Logger of(Class<? extends JavaPlugin> clazz) {
+        return of(JavaPlugin.getPlugin(clazz));
+    }
+
 }
