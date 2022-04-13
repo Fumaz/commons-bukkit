@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 public class Gui implements Listener {
 
     private final JavaPlugin plugin;
-    private final Inventory inventory;
-    private final String title;
-    private final int slots;
+    private Inventory inventory;
+    private String title;
+    private  int slots;
 
     private boolean interactable;
     private boolean registered;
@@ -100,6 +100,20 @@ public class Gui implements Listener {
 
         player.openInventory(inventory);
         player.updateInventory();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        this.inventory = Bukkit.createInventory(null, slots, title);
+
+        getViewers().forEach(viewer -> viewer.openInventory(inventory));
+    }
+
+    public void setSlots(int slots) {
+        this.slots = slots;
+        this.inventory = Bukkit.createInventory(null, slots, title);
+
+        getViewers().forEach(viewer -> viewer.openInventory(inventory));
     }
 
     public List<Player> getViewers() {
