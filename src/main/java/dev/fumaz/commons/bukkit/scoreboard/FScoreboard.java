@@ -1,9 +1,13 @@
 package dev.fumaz.commons.bukkit.scoreboard;
 
+import com.google.common.collect.Iterators;
+import dev.fumaz.commons.bukkit.misc.Scheduler;
 import dev.fumaz.commons.math.Randoms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -11,6 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -22,6 +27,7 @@ public class FScoreboard {
 
 
     private boolean changed;
+    private BukkitTask titleTask;
 
     public FScoreboard() {
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -36,7 +42,18 @@ public class FScoreboard {
 
     public FScoreboard setTitle(String title) {
         objective.setDisplayName(title);
-        changed = true;
+        return this;
+    }
+
+    public FScoreboard setAnimatedTitle(JavaPlugin plugin, Iterable<String> titles, int delay) {
+        Iterator<String> iterator = Iterators.cycle(titles);
+
+        if (titleTask != null) {
+            titleTask.cancel();
+        }
+
+        titleTask = Scheduler.of(plugin).runTaskTimerAsynchronously(() -> setTitle(iterator.next()), 0, delay);
+
         return this;
     }
 
@@ -125,6 +142,10 @@ public class FScoreboard {
                     .filter(entry -> entry instanceof DynamicScoreboardEntry)
                     .forEach(entry -> updateTeamText(entry.getTeam(), getFormattedEntry(entry)));
         }
+    }
+
+    public void shutdown() {
+        titleTask.cancel();
     }
 
     private String getRandomID() {

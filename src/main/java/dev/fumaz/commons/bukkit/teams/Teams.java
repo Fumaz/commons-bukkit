@@ -1,4 +1,4 @@
-package dev.fumaz.commons.bukkit.scoreboard;
+package dev.fumaz.commons.bukkit.teams;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

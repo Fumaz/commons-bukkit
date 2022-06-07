@@ -1,6 +1,6 @@
 package dev.fumaz.commons.bukkit.scoreboard;
 
-public class BlankScoreboardEntry extends ScoreboardEntry{
+public class BlankScoreboardEntry extends ScoreboardEntry {
 
     @Override
     public String getKey() {

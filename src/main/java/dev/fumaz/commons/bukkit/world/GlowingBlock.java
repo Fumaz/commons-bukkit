@@ -2,7 +2,7 @@ package dev.fumaz.commons.bukkit.world;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import dev.fumaz.commons.bukkit.interfaces.PluginListener;
-import dev.fumaz.commons.bukkit.scoreboard.ColoredTeams;
+import dev.fumaz.commons.bukkit.teams.ColoredTeams;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
