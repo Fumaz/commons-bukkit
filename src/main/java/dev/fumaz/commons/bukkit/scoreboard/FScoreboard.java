@@ -104,7 +104,7 @@ public class FScoreboard {
     }
 
     public void clear() {
-        IntStream.range(0, entries.size()).forEach(this::removeEntry);
+        IntStream.range(0, entries.size()).forEach(i -> this.removeEntry(0));
         changed = true;
     }
 
